@@ -90,6 +90,11 @@ app.post('/signup', (req, expressRes, next) => {
   let username = req.body.username;
   let password = req.body.password;
 
+  if (!username || username.length < 2) {
+    expressRes.status(500).send({ error: 'Choose a better username!' })
+    return;
+  }
+
   let saltAndHashObject = saltHashPassword(password);
   let salt = saltAndHashObject.salt;
   let hash = saltAndHashObject.hash;
@@ -204,6 +209,12 @@ function highestIdForUsername(username, callback) {
 app.post('/follow', (req, expressRes, next) => {
   let token = req.body.token;
   let usernameFollowing = req.body.userToFollow;
+
+  if (!usernameFollowing || usernameFollowing.length < 2) {
+    expressRes.status(500).send({ error: 'Follow a better username!' })
+    return;
+  }
+
   getUser(token, (err, user) => {
     if (err) {
       expressRes.status(500).send({ error: 'Something failed!' });
